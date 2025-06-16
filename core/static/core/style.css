@@ -1,0 +1,9 @@
+body {
+  background: #f0f8ff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.list-group-item {
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
