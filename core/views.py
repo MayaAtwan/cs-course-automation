@@ -42,3 +42,18 @@ def exercises_delete(request, pk):
         exercise.delete()
         return redirect('exercises_list')
     return render(request, 'core/exercises_confirm_delete.html', {'exercise': exercise})
+
+
+def exercises_edit(request, pk):
+    exercise = Exercise.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = ExerciseForm(request.POST, instance=exercise)
+        if form.is_valid():
+            exercise = form.save(commit=False)
+            exercise.tags = form.cleaned_data['tags']
+            exercise.save()
+            return redirect('exercises_list')
+    else:
+        form = ExerciseForm(instance=exercise)
+    return render(request, 'core/exercises_form.html', {'form': form, 'edit': True})
+
