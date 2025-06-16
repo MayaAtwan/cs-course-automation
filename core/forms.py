@@ -1,7 +1,7 @@
 from django import forms
 from .models import Exercise
 
-TAG_CHOICES = [
+PREDEFINED_TAGS = [
     ('trees', 'Trees'),
     ('dfs', 'DFS'),
     ('recursion', 'Recursion'),
@@ -10,15 +10,16 @@ TAG_CHOICES = [
 
 class ExerciseForm(forms.ModelForm):
     tags = forms.MultipleChoiceField(
-        choices=TAG_CHOICES,
+        choices=PREDEFINED_TAGS,
         widget=forms.CheckboxSelectMultiple,
         required=False
+    )
+    custom_tags = forms.CharField(
+        required=False,
+        label='Other tags (comma separated)',
+        widget=forms.TextInput(attrs={'placeholder': 'e.g. dp, backtracking'})
     )
 
     class Meta:
         model = Exercise
-        fields = ['title', 'content', 'difficulty', 'tags']
-
-    def clean_tags(self):
-        tags = self.cleaned_data.get('tags', [])
-        return [tag.lower() for tag in tags]  # 💡 normalize to lowercase
+        fields = ['title', 'content', 'difficulty', 'tags', 'custom_tags']
