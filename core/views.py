@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Exercise
 from .forms import ExerciseForm
+from django.shortcuts import get_object_or_404
 
 def exercises_list(request):
     tag = request.GET.get('tag')
@@ -33,3 +34,11 @@ def exercises_add(request):
     else:
         form = ExerciseForm()
     return render(request, 'core/exercises_form.html', {'form': form})
+
+
+def exercises_delete(request, pk):
+    exercise = get_object_or_404(Exercise, pk=pk)
+    if request.method == 'POST':
+        exercise.delete()
+        return redirect('exercises_list')
+    return render(request, 'core/exercises_confirm_delete.html', {'exercise': exercise})
