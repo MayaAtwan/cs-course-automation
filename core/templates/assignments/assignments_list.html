@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>📋 Assignments List</h2>
+    <ul class="list-group mt-3">
+      {% for assignment in assignments %}
+        <li class="list-group-item">
+          <strong>{{ assignment.title }}</strong><br>
+          {{ assignment.description }}<br>
+          Due: {{ assignment.due_date }}
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted">No assignments available.</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

@@ -10,7 +10,6 @@
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'core/style.css' %}">
-
   <style>
     body {
       background-color: #f4f6f9;
@@ -21,8 +20,7 @@
       background-color: #002855;
     }
 
-    .navbar-brand,
-    .nav-link {
+    .navbar-brand, .nav-link {
       color: white !important;
       font-weight: 500;
     }
@@ -90,10 +88,22 @@
       color: #6b7280;
     }
 
-    .question-preview {
-      font-size: 0.9rem;
-      color: #444;
-      margin-left: 10px;
+    .preview-box {
+      background-color: #fff;
+      border-left: 6px solid #2563eb;
+      padding: 20px;
+      margin-top: 40px;
+      border-radius: 10px;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.08);
+    }
+
+    .preview-box h4 {
+      color: #1e3a8a;
+    }
+
+    .preview-box ul {
+      list-style-type: disc;
+      padding-left: 20px;
     }
   </style>
 </head>
@@ -107,8 +117,8 @@
     <div class="navbar-nav ms-auto">
       <a class="nav-link" href="{% url 'exercises_list' %}">All Exercises</a>
       <a class="nav-link" href="{% url 'exercises_add' %}">Add Exercise</a>
-        <a class="nav-link" href="{% url 'assignments_list' %}">All Assignments</a>
-  <a class="nav-link" href="{% url 'create_assignment' %}">Add Assignment</a>
+      <a class="nav-link" href="{% url 'assignments_list' %}">All Assignments</a>
+      <a class="nav-link" href="{% url 'create_assignment' %}">Add Assignment</a>
     </div>
   </div>
 </nav>
@@ -145,12 +155,31 @@
           {% endfor %}
 
           <div class="text-center">
+            <button type="submit" name="preview" value="true" class="btn btn-secondary me-2">
+              <i class="fas fa-eye me-2"></i>Preview
+            </button>
             <button type="submit" class="btn btn-submit">
               <i class="fas fa-plus me-2"></i>Save Assignment
             </button>
           </div>
         </form>
       </div>
+
+      {% if preview %}
+        <div class="preview-box mt-4">
+          <h4>📤 Preview: Assignment Content for GitHub</h4>
+          <p><strong>Title:</strong> {{ form.cleaned_data.title }}</p>
+          <p><strong>Description:</strong> {{ form.cleaned_data.description }}</p>
+          <p><strong>Due Date:</strong> {{ form.cleaned_data.due_date }}</p>
+          <p><strong>Group Type:</strong> {{ form.cleaned_data.group_type }}</p>
+          <p><strong>Questions:</strong></p>
+          <ul>
+            {% for exercise in form.cleaned_data.exercises %}
+              <li>{{ exercise.title }} ({{ exercise.get_difficulty_display }})</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>

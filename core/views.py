@@ -4,6 +4,27 @@ from .forms import ExerciseForm
 from django.shortcuts import get_object_or_404
 from .forms import AssignmentForm
 from .models import Assignment  # make sure Assignment is imported
+from django.shortcuts import render, redirect
+from .forms import AssignmentForm
+
+def create_assignment(request):
+    preview = False
+
+    if request.method == 'POST':
+        form = AssignmentForm(request.POST)
+        if form.is_valid():
+            if 'preview' in request.POST:
+                preview = True  # Just show the preview
+            else:
+                assignment = form.save()
+                return redirect('assignments_list')
+    else:
+        form = AssignmentForm()
+
+    return render(request, 'assignments/assignment_form.html', {
+        'form': form,
+        'preview': preview
+    })
 
 def assignments_list(request):
     assignments = Assignment.objects.all().order_by('-created_at')
@@ -64,12 +85,4 @@ def exercises_edit(request, pk):
     return render(request, 'core/exercises_form.html', {'form': form, 'edit': True})
 
 
-def create_assignment(request):
-    if request.method == 'POST':
-        form = AssignmentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('assignments_list')  # Create this URL/view next
-    else:
-        form = AssignmentForm()
-    return render(request, 'assignments/assignment_form.html', {'form': form})
+
