@@ -2,6 +2,12 @@ from django.shortcuts import render, redirect
 from .models import Exercise
 from .forms import ExerciseForm
 from django.shortcuts import get_object_or_404
+from .forms import AssignmentForm
+from .models import Assignment  # make sure Assignment is imported
+
+def assignments_list(request):
+    assignments = Assignment.objects.all().order_by('-created_at')
+    return render(request, 'assignments/assignments_list.html', {'assignments': assignments})
 
 def exercises_list(request):
     tag = request.GET.get('tag')
@@ -57,3 +63,13 @@ def exercises_edit(request, pk):
         form = ExerciseForm(instance=exercise)
     return render(request, 'core/exercises_form.html', {'form': form, 'edit': True})
 
+
+def create_assignment(request):
+    if request.method == 'POST':
+        form = AssignmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('assignments_list')  # Create this URL/view next
+    else:
+        form = AssignmentForm()
+    return render(request, 'assignments/assignment_form.html', {'form': form})

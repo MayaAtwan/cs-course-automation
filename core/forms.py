@@ -1,5 +1,6 @@
 from django import forms
 from .models import Exercise
+from .models import Assignment
 
 PREDEFINED_TAGS = [
     ('trees', 'Trees'),
@@ -23,3 +24,14 @@ class ExerciseForm(forms.ModelForm):
     class Meta:
         model = Exercise
         fields = ['title', 'content', 'difficulty', 'tags', 'custom_tags']
+
+
+class AssignmentForm(forms.ModelForm):
+    class Meta:
+        model = Assignment
+        fields = ['title', 'description', 'due_date', 'group_type', 'exercises']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4}),
+            'due_date': forms.DateInput(attrs={'type': 'date'}),
+            'exercises': forms.CheckboxSelectMultiple()
+        }
